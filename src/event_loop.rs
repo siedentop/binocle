@@ -66,11 +66,15 @@ pub fn run(options: CliOptions) -> Result<()> {
     let mut mouse_drag_action = MouseDragAction::Nothing;
 
     event_loop.run(move |event, _, control_flow| {
+        puffin::GlobalProfiler::lock().new_frame();
+        puffin::profile_scope!("event_loop.run");
+
         // Update egui inputs
         gui.handle_event(&event);
 
         // Draw the current frame
         if let Event::RedrawRequested(_) = event {
+            puffin::profile_scope!("Event::RedrawRequested");
             // Draw the binocle
             binocle.draw(pixels.get_frame());
 
@@ -100,6 +104,7 @@ pub fn run(options: CliOptions) -> Result<()> {
 
         // Handle input events
         if input.update(&event) {
+            puffin::profile_scope!("input.update");
             {
                 let mut settings = &mut binocle.settings;
 
