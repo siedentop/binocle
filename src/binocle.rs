@@ -129,6 +129,8 @@ impl Binocle {
             } else {
                 let view_index = y * settings.width + x;
 
+                puffin::profile_scope!("pixel loop");
+
                 style.color_at_index(&view, view_index)
             };
 
